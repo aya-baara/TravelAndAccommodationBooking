@@ -17,13 +17,13 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.HasOne(i => i.Hotel)
             .WithMany(h => h.Images)
             .HasForeignKey(i => i.HotelId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         // image -> room (many-to-one)
         builder.HasOne(i => i.Room)
             .WithMany(r => r.Images)
             .HasForeignKey(i => i.RoomId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 }

@@ -15,6 +15,9 @@ public class DiscountConfiguration : IEntityTypeConfiguration<Discount>
             .HasForeignKey(d => d.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Property(d => d.Percentage)
+            .HasPrecision(8, 6);
+
     }
 }
 

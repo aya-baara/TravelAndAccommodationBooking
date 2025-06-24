@@ -17,7 +17,10 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             .WithOne(b => b.Invoice)
             .HasForeignKey<Invoice>(i => i.BookingId)
             .OnDelete(DeleteBehavior.Cascade);
-            
+
+        builder.Property(i => i.TotalAmount)
+            .HasPrecision(8, 6);
+
     }
 }
 

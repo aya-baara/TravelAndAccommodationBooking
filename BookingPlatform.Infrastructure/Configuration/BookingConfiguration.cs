@@ -17,6 +17,11 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.HasMany(b => b.Rooms)
             .WithMany(r => r.Bookings);
+
+        builder.Property(b => b.TotalPriceAfterDiscount)
+            .HasPrecision(8, 6);
+        builder.Property(b => b.TotalPriceBeforeDiscount)
+            .HasPrecision(8, 6);
     }
 }
 
