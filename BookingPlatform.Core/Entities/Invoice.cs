@@ -2,7 +2,7 @@
 
 namespace BookingPlatform.Core.Entities;
 
-class Invoice : BaseEntity
+public class Invoice : BaseEntity
 {
     public Guid BookingId { get; set; }
     public Booking Booking { get; set; }
