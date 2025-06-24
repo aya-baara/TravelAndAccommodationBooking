@@ -11,5 +11,6 @@ public class Booking : BaseEntity
     public DateOnly BookingDate { get; set; }
     public decimal TotalPriceBeforeDiscount { get; set; }
     public decimal TotalPriceAfterDiscount { get; set; }
+    public Invoice Invoice { get; set; }
 }
 
