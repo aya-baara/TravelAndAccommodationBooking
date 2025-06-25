@@ -1,3 +1,4 @@
+using BookingPlatform.Core.Interfaces.Services;
 using BookingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
 
 
 var app = builder.Build();
