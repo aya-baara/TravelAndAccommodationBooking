@@ -2,7 +2,7 @@
 
 namespace BookingPlatform.Core.Interfaces.Repositories;
 
-interface IBookingRepository
+public interface IBookingRepository
 {
     Task CreateBookingAsync(Booking booking);
     Task<List<Booking>?> GetBookingByUserIdAsync(Guid userId);
