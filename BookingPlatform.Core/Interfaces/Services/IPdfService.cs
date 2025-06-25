@@ -1,4 +1,4 @@
-﻿namespace BookingPlatform.Core.Interfaces;
+﻿namespace BookingPlatform.Core.Interfaces.Services;
 
 public interface IPdfService
 {
