@@ -1,4 +1,5 @@
 ﻿using BookingPlatform.Core.Entities;
+using BookingPlatform.Core.Models;
 
 namespace BookingPlatform.Core.Interfaces.Repositories;
 
@@ -10,5 +11,6 @@ public interface IHotelRepository
     Task UpdateHotelAsync(Hotel hotel);
     Task DeleteHotelByIdAsync(Guid hotelId);
     Task UpdateHotelRateAsync(Guid hotelId, double newRate);
+    Task<HotelRatingStats?> GetRatingStatsByHotelIdAsync(Guid hotelId);
 }
 

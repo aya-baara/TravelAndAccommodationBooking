@@ -1,6 +1,7 @@
 ﻿using BookingPlatform.Core.Entities;
 using BookingPlatform.Core.Enums;
 using BookingPlatform.Core.Interfaces.Repositories;
+using BookingPlatform.Core.Models;
 using BookingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -79,5 +80,20 @@ public class HotelRepository : IHotelRepository
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<HotelRatingStats?> GetRatingStatsByHotelIdAsync(Guid hotelId)
+    {
+        var stats = await _context.Reviews
+            .Where(r => r.HotelId == hotelId)
+            .GroupBy(_ => 1)
+            .Select(g => new HotelRatingStats
+            {
+                Count = g.Count(),
+                Sum = g.Sum(r => r.Rate)
+            })
+            .FirstOrDefaultAsync();
+
+        return stats;
+    }
+
 }
 
