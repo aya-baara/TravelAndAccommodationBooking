@@ -6,8 +6,9 @@ public interface IImageRepository
 {
     Task CreateAsync(Image image);
     Task<Image?> GetImageByIdAsync(Guid imageId);
-    Task<List<Image>?> GetHotelImagesAsync(Guid hotelId);
-    Task<List<Image>?> GetRoomImagesAsync(Guid roomId);
+    Task<List<Image>> GetHotelGalleryImagesAsync(Guid hotelId);
+    Task<Image?> GetHotelThumbnailImageAsync(Guid hotelId);
+    Task<List<Image>> GetRoomGalleryImagesAsync(Guid roomId);
     Task UpdateImageAsync(Image image);
     Task DeleteImageByIdAsync(Guid imageId);
 
