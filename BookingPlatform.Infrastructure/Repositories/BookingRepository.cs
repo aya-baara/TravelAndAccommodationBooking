@@ -13,23 +13,23 @@ public class BookingRepository : IBookingRepository
         _context = context;
     }
 
-    public async Task<Booking> CreateBookingAsync(Booking booking)
+    public async Task<Booking> CreateBookingAsync(Booking booking, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Bookings.AddAsync(booking);
-        await _context.SaveChangesAsync();
+        var result = await _context.Bookings.AddAsync(booking, cancellationToken);
         return result.Entity;
 
     }
 
-    public Task<List<Booking>> GetBookingByUserIdAsync(Guid userId)
+    public Task<List<Booking>> GetBookingByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        return _context.Bookings.Where(b => b.UserId == userId).ToListAsync();
+        return _context.Bookings.Where(b => b.UserId == userId).ToListAsync(cancellationToken);
     }
 
-    public Task<List<Booking>> GetRecentlyBookingByUserIdAsync(Guid userId)
+    public Task<List<Booking>> GetRecentlyBookingByUserIdAsync(Guid userId
+        , CancellationToken cancellationToken = default)
     {
         return _context.Bookings.Where(b => b.UserId == userId)
-            .OrderByDescending(b => b.BookingDate).Take(3).ToListAsync();
+            .OrderByDescending(b => b.BookingDate).Take(3).ToListAsync(cancellationToken);
     }
 }
 

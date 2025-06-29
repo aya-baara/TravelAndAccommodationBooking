@@ -14,46 +14,44 @@ public class ReviewRepository : IReviewRepository
         _context = context;
     }
 
-    public async Task<Review> CreateReviewAsync(Review review)
+    public async Task<Review> CreateReviewAsync(Review review, CancellationToken cancellationToken = default)
     {
-        var result=await _context.Reviews.AddAsync(review);
-        await _context.SaveChangesAsync();
+        var result=await _context.Reviews.AddAsync(review, cancellationToken);
         return result.Entity;
 
     }
 
-    public async Task DeleteReviewById(Guid reviewId)
+    public async Task DeleteReviewById(Guid reviewId, CancellationToken cancellationToken = default)
     {
-        var review = await GetReviewByIdAsync(reviewId);
+        var review = await GetReviewByIdAsync(reviewId,cancellationToken);
         if (review != null)
         {
             _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
         }
     }
 
-    public async Task<Review?> GetReviewByIdAsync(Guid reviewId)
+    public async Task<Review?> GetReviewByIdAsync(Guid reviewId, CancellationToken cancellationToken = default)
     {
-        return await _context.Reviews.FirstOrDefaultAsync(r => r.Id == reviewId);
+        return await _context.Reviews.FirstOrDefaultAsync(r => r.Id == reviewId,cancellationToken);
     }
 
-    public async Task<PaginatedResult<Review>> GetReviewsByHotelIdAsync(Guid hotelId, int page, int size)
+    public async Task<PaginatedResult<Review>> GetReviewsByHotelIdAsync(Guid hotelId, int page, int size
+        , CancellationToken cancellationToken = default)
     {
-        var totalCount = await _context.Reviews.Where(r=>r.HotelId==hotelId).CountAsync();
+        var totalCount = await _context.Reviews.Where(r=>r.HotelId==hotelId).CountAsync(cancellationToken);
 
         var items = await _context.Reviews
             .Where(r => r.HotelId == hotelId)
             .Skip((page - 1) * size)
             .Take(size)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
         return new PaginatedResult<Review>(items, totalCount, page, size);
     }
 
-    public async Task UpdateReviewAsync(Review review)
+    public async Task UpdateReviewAsync(Review review, CancellationToken cancellationToken = default)
     {
         _context.Reviews.Update(review);
-        await _context.SaveChangesAsync();
     }
 }
 

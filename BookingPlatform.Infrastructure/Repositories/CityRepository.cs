@@ -14,35 +14,33 @@ public class CityRepository : ICityRepository
         _context = context;
     }
 
-    public async Task<City> CreateCityAsync(City city)
+    public async Task<City> CreateCityAsync(City city, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Cities.AddAsync(city);
-        await _context.SaveChangesAsync();
+        var result = await _context.Cities.AddAsync(city, cancellationToken);
         return result.Entity;
 
     }
 
-    public async Task DeleteCityAsync(Guid cityId)
+    public async Task DeleteCityAsync(Guid cityId, CancellationToken cancellationToken = default)
     {
-        var city = await GetCityByIdAsync(cityId);
+        var city = await GetCityByIdAsync(cityId, cancellationToken);
         if (city != null)
         {
             _context.Cities.Remove(city);
-            await _context.SaveChangesAsync();
         }
     }
 
-    public async Task<City?> GetCityByIdAsync(Guid cityId)
+    public async Task<City?> GetCityByIdAsync(Guid cityId, CancellationToken cancellationToken = default)
     {
-        return await _context.Cities.FirstOrDefaultAsync(c => c.Id == cityId);
+        return await _context.Cities.FirstOrDefaultAsync(c => c.Id == cityId, cancellationToken);
     }
 
-    public async Task<City?> GetCityByNameAsync(string name)
+    public async Task<City?> GetCityByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return await _context.Cities.FirstOrDefaultAsync(c => c.Name == name);
+        return await _context.Cities.FirstOrDefaultAsync(c => c.Name == name, cancellationToken);
     }
 
-    public async Task<List<City>> GetTopBookedCitiesAsync(int num)
+    public async Task<List<City>> GetTopBookedCitiesAsync(int num, CancellationToken cancellationToken = default)
     {
         return await _context.Bookings
        .Where(b => b.Rooms.Any())
@@ -59,10 +57,9 @@ public class CityRepository : ICityRepository
        .ToListAsync();
     }
 
-    public async Task UpdateCityAsync(City city)
+    public async Task UpdateCityAsync(City city, CancellationToken cancellationToken = default)
     {
         _context.Cities.Update(city);
-        await _context.SaveChangesAsync();
     }
 }
 

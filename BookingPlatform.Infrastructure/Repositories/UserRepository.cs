@@ -17,28 +17,27 @@ public class UserRepository : IUserRepository
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<User?> AuthenticateUserAsync(string email, string password)
+    public async Task<User?> AuthenticateUserAsync(string email, string password, CancellationToken cancellationToken = default)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         return user != null && _passwordHasher.VerifyPassword(password, user.Password) ? user : null;
 
     }
 
-    public async Task<User> CreateUserAsync(User user)
+    public async Task<User> CreateUserAsync(User user, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        var result = await _context.Users.AddAsync(user, cancellationToken);
         return result.Entity;
     }
 
-    public async Task<bool> DoesUserExistAsync(string email)
+    public async Task<bool> DoesUserExistAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await _context.Users.AnyAsync(u => u.Email == email);
+        return await _context.Users.AnyAsync(u => u.Email == email, cancellationToken);
     }
 
-    public async Task<User?> GetUserByIdAsync(Guid id)
+    public async Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
     }
 }
 

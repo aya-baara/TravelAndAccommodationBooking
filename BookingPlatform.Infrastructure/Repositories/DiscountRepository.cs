@@ -14,50 +14,45 @@ public class DiscountRepository : IDiscountRepository
         _context = context;
     }
 
-    public async Task<Discount> CreateDiscountAsync(Discount discount)
+    public async Task<Discount> CreateDiscountAsync(Discount discount, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Discounts.AddAsync(discount);
-        await _context.SaveChangesAsync();
+        var result = await _context.Discounts.AddAsync(discount, cancellationToken);
         return result.Entity;
     }
 
-    public async Task DeleteDiscountByIdAsync(Guid discountId)
+    public async Task DeleteDiscountByIdAsync(Guid discountId, CancellationToken cancellationToken = default)
     {
-        var discount = await GetDiscountByIdAsync(discountId);
+        var discount = await GetDiscountByIdAsync(discountId, cancellationToken);
         if (discount != null)
         {
             _context.Discounts.Remove(discount);
         }
-        await _context.SaveChangesAsync();
-
     }
 
-    public async Task<Discount?> GetDiscountByIdAsync(Guid discountId)
+    public async Task<Discount?> GetDiscountByIdAsync(Guid discountId, CancellationToken cancellationToken = default)
     {
-        return await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId);
+        return await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId, cancellationToken);
     }
 
-    public async Task<List<Discount>> GetDiscountByRoomIdAsync(Guid roomId)
+    public async Task<List<Discount>> GetDiscountByRoomIdAsync(Guid roomId, CancellationToken cancellationToken = default)
     {
-        return await _context.Discounts.Where(d => d.RoomId == roomId).ToListAsync();
+        return await _context.Discounts.Where(d => d.RoomId == roomId).ToListAsync(cancellationToken);
     }
 
-    public async Task<PaginatedResult<Discount>> GetDiscountsAsync(int page, int size)
+    public async Task<PaginatedResult<Discount>> GetDiscountsAsync(int page, int size, CancellationToken cancellationToken = default)
     {
-        var totalCount = await _context.Discounts.CountAsync();
-
+        var totalCount = await _context.Discounts.CountAsync(cancellationToken);
         var items = await _context.Discounts
             .Skip((page - 1) * size)
             .Take(size)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new PaginatedResult<Discount>(items, totalCount, page, size);
     }
 
-    public async Task UpdateDiscountAsync(Discount discount)
+    public async Task UpdateDiscountAsync(Discount discount, CancellationToken cancellationToken = default)
     {
         _context.Discounts.Update(discount);
-        await _context.SaveChangesAsync();
     }
 }
 
