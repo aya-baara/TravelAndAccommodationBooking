@@ -4,11 +4,11 @@ namespace BookingPlatform.Core.Interfaces.Repositories;
 
 public interface IInvoiceRopsitory
 {
-    Task CreateInvoiceAsync(Invoice invoice);
-    Task<Invoice?> GetInvoiceByIdAsync(Guid invoiceId);
-    Task<Invoice?> GetInvoiceByBookingIdAsync(Guid bookingId);
-    Task UpdateInvoiceAsync(Invoice invoice);
-    Task DeleteInvoiceAsync(Guid invoiceId);
+    Task<Invoice> CreateInvoiceAsync(Invoice invoice, CancellationToken cancellationToken = default);
+    Task<Invoice?> GetInvoiceByIdAsync(Guid invoiceId, CancellationToken cancellationToken = default);
+    Task<Invoice?> GetInvoiceByBookingIdAsync(Guid bookingId, CancellationToken cancellationToken = default);
+    Task UpdateInvoiceAsync(Invoice invoice, CancellationToken cancellationToken = default);
+    Task DeleteInvoiceAsync(Guid invoiceId, CancellationToken cancellationToken = default);
 }
 
 

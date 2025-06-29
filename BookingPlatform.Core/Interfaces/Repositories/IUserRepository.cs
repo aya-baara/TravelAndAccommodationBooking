@@ -4,9 +4,9 @@ namespace BookingPlatform.Core.Interfaces.Repositories;
 
 public interface IUserRepository
 {
-    Task<User?> AuthenticateUserAsync(string email, string password);
-    Task CreateUserAsync(User user);
-    Task<User?> GetUserByIdAsync(Guid id);
-    Task<bool> DoesUserExistAsync(string email);
+    Task<User?> AuthenticateUserAsync(string email, string password, CancellationToken cancellationToken = default);
+    Task<User> CreateUserAsync(User user, CancellationToken cancellationToken = default);
+    Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> DoesUserExistAsync(string email, CancellationToken cancellationToken = default);
 }
 
