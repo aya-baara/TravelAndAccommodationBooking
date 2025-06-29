@@ -10,9 +10,8 @@ public class HotelProfile : Profile
 {
     public HotelProfile()
     {
-        CreateMap<CreateHotelCommand, Hotel>()
-            .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
-            .ForMember(dest => dest.ModifiedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<CreateHotelCommand, Hotel>();
+           
         CreateMap<UpdateHotelCommand,Hotel>()
             .ForMember(dest => dest.ModifiedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
 

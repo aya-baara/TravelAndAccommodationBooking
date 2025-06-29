@@ -28,29 +28,9 @@ public class RoomRepository : IRoomRepository
         }
     }
 
-    public async Task<PaginatedResult<Room>> GetAvailbleRoomsByHotelIdAsync(Guid hotelId, int page, int size
-        , CancellationToken cancellationToken = default)
-    {
-        var totalCount = await _context.Rooms.Where(r=>r.HotelId==hotelId && r.IsAvailble == true)
-            .CountAsync(cancellationToken);
-
-        var items = await _context.Rooms
-            .Where(r => r.HotelId == hotelId && r.IsAvailble == true)
-            .Skip((page - 1) * size)
-            .Take(size)
-            .ToListAsync(cancellationToken);
-
-        return new PaginatedResult<Room>(items, totalCount, page, size);
-    }
-
     public async Task<Room?> GetRoomByIdAsync(Guid roomId, CancellationToken cancellationToken = default)
     {
         return await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId,cancellationToken);
-    }
-
-    public async Task<bool> IsRoomAvailbleAsync(Guid roomId, CancellationToken cancellationToken = default)
-    {
-        return (await GetRoomByIdAsync(roomId,cancellationToken))?.IsAvailble == true;
     }
 
     public async Task UpdateRoomAsync(Room room, CancellationToken cancellationToken = default)
@@ -58,4 +38,3 @@ public class RoomRepository : IRoomRepository
         _context.Rooms.Update(room);
     }
 }
-

@@ -70,14 +70,6 @@ public class HotelRepository : IHotelRepository
         _context.Hotels.Update(hotel);
     }
 
-    public async Task UpdateHotelRateAsync(Guid hotelId, double newRate, CancellationToken cancellationToken = default)
-    {
-        var hotel = await GetHotelByIdAsync(hotelId, cancellationToken);
-        if (hotel != null)
-        {
-            hotel.ReviewRating = newRate;
-        }
-    }
     public async Task<HotelRatingStats?> GetRatingStatsByHotelIdAsync(Guid hotelId
         , CancellationToken cancellationToken = default)
     {

@@ -5,7 +5,6 @@ namespace BookingPlatform.Core.Entities;
 public class Room : BaseEntity, IAuditableEntity
 {
     public RoomType RoomType { get; set; }
-    public bool IsAvailble { get; set; }
     public string Description { get; set; }
     public int PricePerNight { get; set; }
     public int AdultCapacity { get; set; }

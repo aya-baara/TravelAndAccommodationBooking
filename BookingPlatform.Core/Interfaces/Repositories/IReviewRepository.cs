@@ -10,5 +10,4 @@ public interface IReviewRepository
         , CancellationToken cancellationToken = default);
     Task UpdateReviewAsync(Review review, CancellationToken cancellationToken = default);
     Task DeleteReviewById(Guid reviewId, CancellationToken cancellationToken = default);
->>>>>>> Infrastructure
 }
