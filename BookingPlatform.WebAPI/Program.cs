@@ -48,9 +48,10 @@ builder.Services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.Configure<SmtpSettings>(
-builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<IPdfService, PdfGeneratorService>();
+
 
 
 var app = builder.Build();
