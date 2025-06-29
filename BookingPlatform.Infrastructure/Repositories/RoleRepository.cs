@@ -14,32 +14,30 @@ public class RoleRepository : IRoleRepository
         _context = context;
     }
 
-    public async Task<Role> CreateRoleAsync(Role role)
+    public async Task<Role> CreateRoleAsync(Role role, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Roles.AddAsync(role);
-        await _context.SaveChangesAsync();
+        var result = await _context.Roles.AddAsync(role, cancellationToken);
         return result.Entity;
 
     }
 
-    public async Task DeleteRoleAsync(Guid roleId)
+    public async Task DeleteRoleAsync(Guid roleId, CancellationToken cancellationToken = default)
     {
-        var role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
-        if(role != null)
+        var role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == roleId, cancellationToken);
+        if (role != null)
         {
             _context.Roles.Remove(role);
-            await _context.SaveChangesAsync();
         }
     }
 
-    public async Task<List<User>> GetAdmins()
+    public async Task<List<User>> GetAdmins(CancellationToken cancellationToken = default)
     {
-        return await _context.Users.Where(u => u.Role.Name == UserRole.Admin).ToListAsync();
+        return await _context.Users.Where(u => u.Role.Name == UserRole.Admin).ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Role>> GetRolesAsync()
+    public async Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Roles.ToListAsync();
+        return await _context.Roles.ToListAsync(cancellationToken);
     }
 }
 

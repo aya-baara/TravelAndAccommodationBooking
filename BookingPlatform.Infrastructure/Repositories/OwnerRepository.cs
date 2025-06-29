@@ -13,45 +13,29 @@ public class OwnerRepository : IOwnerRepository
         _context = context;
     }
 
-    public async Task<Owner> CreateOwnerAsync(Owner owner)
+    public async Task<Owner> CreateOwnerAsync(Owner owner, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Owners.AddAsync(owner);
-        await _context.SaveChangesAsync();
+        var result = await _context.Owners.AddAsync(owner, cancellationToken);
         return result.Entity;
     }
 
-    public async Task DeleteOwnerById(Guid ownerId)
+    public async Task DeleteOwnerById(Guid ownerId, CancellationToken cancellationToken = default)
     {
-        var owner = await GetOwnerByIdAsync(ownerId);
+        var owner = await GetOwnerByIdAsync(ownerId, cancellationToken);
         if (owner != null)
         {
             _context.Owners.Remove(owner);
-            await _context.SaveChangesAsync();
         }
     }
 
-    public async Task<PaginatedResult<Hotel>> GetHotelsByOwnerIdAsync(Guid ownerId, int page, int size)
+    public async Task<Owner?> GetOwnerByIdAsync(Guid ownerId, CancellationToken cancellationToken = default)
     {
-        var totalCount = await _context.Hotels.Where(h => h.OwnerId == ownerId).CountAsync();
-
-        var items = await _context.Hotels
-            .Where(h => h.OwnerId == ownerId)
-            .Skip((page - 1) * size)
-            .Take(size)
-            .AsNoTracking()
-            .ToListAsync();
-        return new PaginatedResult<Hotel>(items, totalCount, page, size);
+        return await _context.Owners.FirstOrDefaultAsync(o => o.Id == ownerId, cancellationToken);
     }
 
-    public async Task<Owner?> GetOwnerByIdAsync(Guid ownerId)
-    {
-        return await _context.Owners.FirstOrDefaultAsync(o => o.Id == ownerId);
-    }
-
-    public async Task UpdateOwner(Owner owner)
+    public async Task UpdateOwner(Owner owner, CancellationToken cancellationToken = default)
     {
         _context.Owners.Update(owner);
-        await _context.SaveChangesAsync();
     }
 }
 

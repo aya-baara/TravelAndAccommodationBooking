@@ -2,7 +2,7 @@
 
 namespace BookingPlatform.Core.Entities;
 
-public class Room : BaseEntity
+public class Room : BaseEntity, IAuditableEntity
 {
     public RoomType RoomType { get; set; }
     public bool IsAvailble { get; set; }
@@ -15,7 +15,7 @@ public class Room : BaseEntity
     public List<Booking> Bookings { get; set; } = new();
     public List<Discount> Discounts { get; set; } = new List<Discount>();
     public List<Image> Images { get; set; } = new List<Image>();
-    public DateTime CreateAt { get; set; }
-    public DateTime ModifiedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? ModifiedAt { get; set; }
 }
 

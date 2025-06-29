@@ -16,45 +16,44 @@ public class HotelRepository : IHotelRepository
         _context = context;
     }
 
-    public async Task<Hotel> CreateHotelAsync(Hotel hotel)
+    public async Task<Hotel> CreateHotelAsync(Hotel hotel, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Hotels.AddAsync(hotel);
-        await _context.SaveChangesAsync();
+        var result = await _context.Hotels.AddAsync(hotel, cancellationToken);
         return result.Entity;
     }
 
-    public async Task DeleteHotelByIdAsync(Guid hotelId)
+    public async Task DeleteHotelByIdAsync(Guid hotelId, CancellationToken cancellationToken = default)
     {
-        var hotel = await GetHotelByIdAsync(hotelId);
+        var hotel = await GetHotelByIdAsync(hotelId, cancellationToken);
         if (hotel != null)
         {
             _context.Hotels.Remove(hotel);
         }
-        await _context.SaveChangesAsync();
     }
 
-    public async Task<Hotel?> GetHotelByIdAsync(Guid hotelId)
+    public async Task<Hotel?> GetHotelByIdAsync(Guid hotelId, CancellationToken cancellationToken = default)
     {
-        var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.Id == hotelId);
+        var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.Id == hotelId, cancellationToken);
         if (hotel != null)
         {
             var hotelThumbnail = await _context.Images
-                .FirstOrDefaultAsync(i => i.HotelId == hotelId && i.Type == ImageType.Thumbnail);
+                .FirstOrDefaultAsync(i => i.HotelId == hotelId && i.Type == ImageType.Thumbnail, cancellationToken);
             hotel.Thumbnail = hotelThumbnail;
         }
         return hotel;
     }
 
-    public async Task<PaginatedResult<Hotel>> GetHotelsByCityIdAsync(Guid cityId, int page, int size)
+    public async Task<PaginatedResult<Hotel>> GetHotelsByCityIdAsync(Guid cityId, int page, int size
+        , CancellationToken cancellationToken = default)
     {
-        var totalCount = await _context.Hotels.Where(h => h.CityId == cityId).CountAsync();
+        var totalCount = await _context.Hotels.Where(h => h.CityId == cityId).CountAsync(cancellationToken);
 
         var items = await _context.Hotels
             .Where(h => h.CityId == cityId)
             .Skip((page - 1) * size)
             .Take(size)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         foreach (var item in items)
         {
@@ -66,22 +65,21 @@ public class HotelRepository : IHotelRepository
         return new PaginatedResult<Hotel>(items, totalCount, page, size);
     }
 
-    public async Task UpdateHotelAsync(Hotel hotel)
+    public async Task UpdateHotelAsync(Hotel hotel, CancellationToken cancellationToken = default)
     {
         _context.Hotels.Update(hotel);
-        await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateHotelRateAsync(Guid hotelId, double newRate)
+    public async Task UpdateHotelRateAsync(Guid hotelId, double newRate, CancellationToken cancellationToken = default)
     {
-        var hotel = await GetHotelByIdAsync(hotelId);
+        var hotel = await GetHotelByIdAsync(hotelId, cancellationToken);
         if (hotel != null)
         {
             hotel.ReviewRating = newRate;
-            await _context.SaveChangesAsync();
         }
     }
-    public async Task<HotelRatingStats?> GetRatingStatsByHotelIdAsync(Guid hotelId)
+    public async Task<HotelRatingStats?> GetRatingStatsByHotelIdAsync(Guid hotelId
+        , CancellationToken cancellationToken = default)
     {
         var stats = await _context.Reviews
             .Where(r => r.HotelId == hotelId)
@@ -91,7 +89,7 @@ public class HotelRepository : IHotelRepository
                 Count = g.Count(),
                 Sum = g.Sum(r => r.Rate)
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         return stats;
     }
