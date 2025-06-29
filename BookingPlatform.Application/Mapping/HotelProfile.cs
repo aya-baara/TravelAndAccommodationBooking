@@ -17,6 +17,7 @@ public class HotelProfile : Profile
             .ForMember(dest => dest.ModifiedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
 
         CreateMap<Hotel, HotelResponseDto>();
+        CreateMap<Hotel, HotelDetailsDto>();
     }
 }
 
