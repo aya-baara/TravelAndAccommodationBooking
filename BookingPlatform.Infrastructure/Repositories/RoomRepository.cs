@@ -13,10 +13,11 @@ public class RoomRepository : IRoomRepository
         _context = context;
     }
 
-    public async Task CreateRoomAsync(Room room)
+    public async Task<Room> CreateRoomAsync(Room room)
     {
-        _context.Rooms.Add(room);
+        var result = await _context.Rooms.AddAsync(room);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task DeleteRoomByIdAsync(Guid roomId)

@@ -14,10 +14,12 @@ public class ReviewRepository : IReviewRepository
         _context = context;
     }
 
-    public async Task CreateReviewAsync(Review review)
+    public async Task<Review> CreateReviewAsync(Review review)
     {
-        _context.Reviews.Add(review);
+        var result=await _context.Reviews.AddAsync(review);
         await _context.SaveChangesAsync();
+        return result.Entity;
+
     }
 
     public async Task DeleteReviewById(Guid reviewId)

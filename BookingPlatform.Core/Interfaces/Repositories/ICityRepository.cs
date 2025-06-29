@@ -4,7 +4,7 @@ namespace BookingPlatform.Core.Interfaces.Repositories;
 
 public interface ICityRepository
 {
-    Task CreateCityAsync(City city);
+    Task<City> CreateCityAsync(City city);
     Task<City?> GetCityByIdAsync(Guid cityId);
     Task<City?> GetCityByNameAsync(string name);
     Task UpdateCityAsync(City city);

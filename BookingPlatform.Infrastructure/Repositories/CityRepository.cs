@@ -14,10 +14,12 @@ public class CityRepository : ICityRepository
         _context = context;
     }
 
-    public async Task CreateCityAsync(City city)
+    public async Task<City> CreateCityAsync(City city)
     {
-        await _context.Cities.AddAsync(city);
+        var result = await _context.Cities.AddAsync(city);
         await _context.SaveChangesAsync();
+        return result.Entity;
+
     }
 
     public async Task DeleteCityAsync(Guid cityId)

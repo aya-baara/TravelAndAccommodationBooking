@@ -16,10 +16,11 @@ public class HotelRepository : IHotelRepository
         _context = context;
     }
 
-    public async Task CreateHotelAsync(Hotel hotel)
+    public async Task<Hotel> CreateHotelAsync(Hotel hotel)
     {
-        _context.Hotels.Add(hotel);
+        var result = await _context.Hotels.AddAsync(hotel);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task DeleteHotelByIdAsync(Guid hotelId)

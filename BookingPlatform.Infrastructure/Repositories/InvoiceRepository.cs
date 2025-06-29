@@ -13,16 +13,17 @@ public class InvoiceRepository : IInvoiceRopsitory
         _context = context;
     }
 
-    public async Task CreateInvoiceAsync(Invoice invoice)
+    public async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
     {
-        _context.Invoices.Add(invoice);
+        var result = await _context.Invoices.AddAsync(invoice);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task DeleteInvoiceAsync(Guid invoiceId)
     {
         var invoice = await GetInvoiceByIdAsync(invoiceId);
-        if(invoice != null)
+        if (invoice != null)
         {
             _context.Invoices.Remove(invoice);
             await _context.SaveChangesAsync();

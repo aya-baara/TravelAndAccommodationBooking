@@ -15,10 +15,11 @@ public class ImageRepository : IImageRepository
         _context = context;
     }
 
-    public async Task CreateAsync(Image image)
+    public async Task<Image> CreateAsync(Image image)
     {
-        _context.Images.Add(image);
+        var result = await _context.Images.AddAsync(image);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task DeleteImageByIdAsync(Guid imageId)
@@ -33,10 +34,10 @@ public class ImageRepository : IImageRepository
 
     public async Task<List<Image>> GetHotelGalleryImagesAsync(Guid hotelId)
     {
-       return await _context.Images
-            .AsNoTracking()
-            .Where(i => i.HotelId == hotelId && i.Type == ImageType.HotelGallery)
-            .ToListAsync();
+        return await _context.Images
+             .AsNoTracking()
+             .Where(i => i.HotelId == hotelId && i.Type == ImageType.HotelGallery)
+             .ToListAsync();
     }
 
     public async Task<Image?> GetHotelThumbnailImageAsync(Guid hotelId)
@@ -47,7 +48,7 @@ public class ImageRepository : IImageRepository
 
     public async Task<Image?> GetImageByIdAsync(Guid imageId)
     {
-        return await  _context.Images.FirstOrDefaultAsync(i => i.Id == imageId);
+        return await _context.Images.FirstOrDefaultAsync(i => i.Id == imageId);
     }
 
     public async Task<List<Image>> GetRoomGalleryImagesAsync(Guid roomId)

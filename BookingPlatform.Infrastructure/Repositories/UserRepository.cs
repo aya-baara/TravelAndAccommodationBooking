@@ -24,10 +24,11 @@ public class UserRepository : IUserRepository
 
     }
 
-    public async Task CreateUserAsync(User user)
+    public async Task<User> CreateUserAsync(User user)
     {
-        await _context.Users.AddAsync(user);
+        var result = await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task<bool> DoesUserExistAsync(string email)

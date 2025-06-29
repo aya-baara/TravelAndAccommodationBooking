@@ -14,10 +14,11 @@ public class DiscountRepository : IDiscountRepository
         _context = context;
     }
 
-    public async Task CreateDiscountAsync(Discount discount)
+    public async Task<Discount> CreateDiscountAsync(Discount discount)
     {
-        _context.Discounts.Add(discount);
+        var result = await _context.Discounts.AddAsync(discount);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task DeleteDiscountByIdAsync(Guid discountId)

@@ -13,10 +13,11 @@ public class OwnerRepository : IOwnerRepository
         _context = context;
     }
 
-    public async Task CreateOwnerAsync(Owner owner)
+    public async Task<Owner> CreateOwnerAsync(Owner owner)
     {
-        _context.Owners.Add(owner);
+        var result = await _context.Owners.AddAsync(owner);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 
     public async Task DeleteOwnerById(Guid ownerId)

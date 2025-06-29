@@ -4,7 +4,7 @@ namespace BookingPlatform.Core.Interfaces.Repositories;
 
 public interface IImageRepository
 {
-    Task CreateAsync(Image image);
+    Task<Image> CreateAsync(Image image);
     Task<Image?> GetImageByIdAsync(Guid imageId);
     Task<List<Image>> GetHotelGalleryImagesAsync(Guid hotelId);
     Task<Image?> GetHotelThumbnailImageAsync(Guid hotelId);

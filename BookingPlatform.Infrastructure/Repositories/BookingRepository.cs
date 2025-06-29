@@ -13,10 +13,12 @@ public class BookingRepository : IBookingRepository
         _context = context;
     }
 
-    public async Task CreateBookingAsync(Booking booking)
+    public async Task<Booking> CreateBookingAsync(Booking booking)
     {
-         _context.Bookings.Add(booking);
+        var result = await _context.Bookings.AddAsync(booking);
         await _context.SaveChangesAsync();
+        return result.Entity;
+
     }
 
     public Task<List<Booking>> GetBookingByUserIdAsync(Guid userId)

@@ -14,10 +14,12 @@ public class RoleRepository : IRoleRepository
         _context = context;
     }
 
-    public async Task CreateRoleAsync(Role role)
+    public async Task<Role> CreateRoleAsync(Role role)
     {
-        _context.Roles.Add(role);
+        var result = await _context.Roles.AddAsync(role);
         await _context.SaveChangesAsync();
+        return result.Entity;
+
     }
 
     public async Task DeleteRoleAsync(Guid roleId)
