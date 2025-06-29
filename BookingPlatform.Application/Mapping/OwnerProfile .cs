@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using BookingPlatform.Application.Owners.Commands;
+using BookingPlatform.Application.Owners.Commands.Create;
+using BookingPlatform.Application.Owners.Commands.Update;
 using BookingPlatform.Application.Owners.Dtos;
 using BookingPlatform.Core.Entities;
 
@@ -11,6 +12,7 @@ public class OwnerProfile : Profile
     {
         CreateMap<Owner, OwnerResponseDto>();
         CreateMap<CreateOwnerCommand, Owner>();
+        CreateMap<UpdateOwnerCommand, Owner>();
     }
 }
 

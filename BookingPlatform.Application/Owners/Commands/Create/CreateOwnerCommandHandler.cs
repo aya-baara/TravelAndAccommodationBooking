@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using BookingPlatform.Application.Owners.Commands;
 using BookingPlatform.Application.Owners.Dtos;
 using BookingPlatform.Core.Entities;
 using BookingPlatform.Core.Interfaces.Repositories;
 using MediatR;
 
-namespace BookingPlatform.Application.Owners.Handlers.CommandHandlers;
+namespace BookingPlatform.Application.Owners.Commands.Create;
 
 public class CreateOwnerCommandHandler : IRequestHandler<CreateOwnerCommand, OwnerResponseDto>
 {

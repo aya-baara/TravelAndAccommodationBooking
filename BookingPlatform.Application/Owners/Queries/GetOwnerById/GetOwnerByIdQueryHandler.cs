@@ -20,7 +20,7 @@ public class GetOwnerByIdQueryHandler : IRequestHandler<GetOwnerByIdQuery, Owner
     public async Task<OwnerResponseDto> Handle(GetOwnerByIdQuery request, CancellationToken cancellationToken)
     {
         var owner = await _ownerRepository.GetOwnerByIdAsync(request.Id) ??
-            throw new NotFoundException($"The Requested Owner with Not found");
+            throw new NotFoundException($"The Requested Owner Not found");
         return _mapper.Map<OwnerResponseDto>(owner);
     }
 }
