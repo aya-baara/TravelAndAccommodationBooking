@@ -4,12 +4,13 @@ namespace BookingPlatform.Core.Interfaces.Repositories;
 
 public interface IDiscountRepository
 {
-    Task<Discount> CreateDiscountAsync(Discount discount);
-    Task<Discount?> GetDiscountByIdAsync(Guid discountId);
-    Task<List<Discount>> GetDiscountByRoomIdAsync(Guid roomId);
-    Task<PaginatedResult<Discount>> GetDiscountsAsync(int page, int size);
-    Task UpdateDiscountAsync(Discount discount);
-    Task DeleteDiscountByIdAsync(Guid discountId);
+    Task<Discount> CreateDiscountAsync(Discount discount, CancellationToken cancellationToken = default);
+    Task<Discount?> GetDiscountByIdAsync(Guid discountId, CancellationToken cancellationToken = default);
+    Task<List<Discount>> GetDiscountByRoomIdAsync(Guid roomId, CancellationToken cancellationToken = default);
+    Task<PaginatedResult<Discount>> GetDiscountsAsync(int page = 1, int size = 20
+        , CancellationToken cancellationToken = default);
+    Task UpdateDiscountAsync(Discount discount, CancellationToken cancellationToken = default);
+    Task DeleteDiscountByIdAsync(Guid discountId, CancellationToken cancellationToken = default);
 
 }
 
