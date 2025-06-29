@@ -9,6 +9,8 @@ public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
     public void Configure(EntityTypeBuilder<Hotel> builder)
     {
         builder.HasKey(h => h.Id);
+        builder.Property(h => h.Id).HasDefaultValueSql("NEWID()");
+
         builder.Property(h => h.Name).IsRequired();
 
         builder.HasOne(h => h.City)

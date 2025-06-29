@@ -9,6 +9,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
+        builder.Property(u => u.Id).HasDefaultValueSql("NEWID()");
+
 
         builder.Property(u => u.Email).IsRequired();
         builder.HasIndex(u => u.Email).IsUnique();

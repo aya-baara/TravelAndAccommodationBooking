@@ -9,6 +9,8 @@ public class DiscountConfiguration : IEntityTypeConfiguration<Discount>
     public void Configure(EntityTypeBuilder<Discount> builder)
     {
         builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasDefaultValueSql("NEWID()");
+
 
         builder.HasOne(d => d.Room)
             .WithMany(r => r.Discounts)

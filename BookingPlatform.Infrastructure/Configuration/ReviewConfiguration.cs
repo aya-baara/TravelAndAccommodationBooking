@@ -9,6 +9,8 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
     public void Configure(EntityTypeBuilder<Review> builder)
     {
         builder.HasKey(r => r.Id);
+        builder.Property(r => r.Id).HasDefaultValueSql("NEWID()");
+
 
         builder.HasOne(r => r.Hotel)
             .WithMany(h => h.Reviews)

@@ -9,6 +9,8 @@ public class OwnerConfiguration : IEntityTypeConfiguration<Owner>
     public void Configure(EntityTypeBuilder<Owner> builder)
     {
         builder.HasKey(o => o.Id);
+        builder.Property(o => o.Id).HasDefaultValueSql("NEWID()");
+
     }
 }
 

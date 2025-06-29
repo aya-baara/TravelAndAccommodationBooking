@@ -9,6 +9,8 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
         builder.HasKey(i => i.Id);
+        builder.Property(i => i.Id).HasDefaultValueSql("NEWID()");
+
 
         builder.Property(i => i.PaymentMethod)
             .HasConversion<string>();
