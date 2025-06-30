@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BookingPlatform.Core.Interfaces.Auth;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,13 @@ var config = new ConfigurationBuilder()
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Information()
+    .CreateLogger();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
@@ -53,7 +61,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IPdfService, PdfGeneratorService>();
 
 
-
+builder.Host.UseSerilog();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
