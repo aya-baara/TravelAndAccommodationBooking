@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BookingPlatform.Application.Reviews.Dtos;
+using BookingPlatform.Application.Dtos.Reviews;
 using BookingPlatform.Core.Entities;
 
 namespace BookingPlatform.Application.Mapping;

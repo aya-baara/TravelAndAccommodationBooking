@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BookingPlatform.Application.Images.Dtos;
+using BookingPlatform.Application.Dtos.Images;
 using BookingPlatform.Core.Entities;
 
 namespace BookingPlatform.Application.Mapping;
