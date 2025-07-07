@@ -1,7 +1,4 @@
-﻿using BookingPlatform.Core.Entities;
-using System.ComponentModel.DataAnnotations;
-
-namespace BookingPlatform.Application.Dtos.Hotels;
+﻿namespace BookingPlatform.Application.Dtos.Hotels;
 
 public class HotelResponseDto
 {
