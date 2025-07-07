@@ -5,7 +5,6 @@ using BookingPlatform.Core.Entities;
 using BookingPlatform.Core.Exceptions;
 using BookingPlatform.Core.Interfaces;
 using BookingPlatform.Core.Interfaces.Repositories;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace BookingPlatform.Application.Services.Commands;
