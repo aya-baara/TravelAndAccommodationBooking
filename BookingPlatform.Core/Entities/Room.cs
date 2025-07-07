@@ -15,6 +15,6 @@ public class Room : BaseEntity, IAuditableEntity
     public List<Discount> Discounts { get; set; } = new List<Discount>();
     public List<Image> Images { get; set; } = new List<Image>();
     public DateTime CreatedAt { get; set; }
-    public DateTime? ModifiedAt { get; set; }
+    public DateTime ModifiedAt { get; set; }
 }
 

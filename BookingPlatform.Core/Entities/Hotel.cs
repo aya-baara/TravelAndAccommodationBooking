@@ -26,6 +26,6 @@ public class Hotel : BaseEntity, IAuditableEntity
     public List<Image> Images { get; set; } = new List<Image>();
     public Image? Thumbnail { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime? ModifiedAt { get; set; }
+    public DateTime ModifiedAt { get; set; }
 
 }
