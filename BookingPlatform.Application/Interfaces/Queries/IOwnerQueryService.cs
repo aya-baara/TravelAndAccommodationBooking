@@ -1,5 +1,4 @@
-﻿
-using BookingPlatform.Application.Dtos.Owners;
+﻿using BookingPlatform.Application.Dtos.Owners;
 
 namespace BookingPlatform.Application.Interfaces.Queries;
 
