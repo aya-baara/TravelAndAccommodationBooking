@@ -1,5 +1,4 @@
 ﻿namespace BookingPlatform.Application.Dtos.Owners;
-
 public class CreateOwnerDto
 {
     public string FirstName { get; set; }
