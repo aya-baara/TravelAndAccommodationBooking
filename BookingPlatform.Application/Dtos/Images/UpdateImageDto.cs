@@ -2,11 +2,12 @@
 
 namespace BookingPlatform.Application.Dtos.Images;
 
-public class ImageResponseDto
+public class UpdateImageDto
 {
     public Guid Id { get; set; }
     public ImageType Type { get; set; }
     public string Path { get; set; }
-
+    public Guid HotelId { get; set; }
+    public Guid RoomId { get; set; }
 }
 
