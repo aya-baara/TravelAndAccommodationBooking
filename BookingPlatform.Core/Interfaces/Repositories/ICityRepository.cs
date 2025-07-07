@@ -10,6 +10,7 @@ public interface ICityRepository
     Task UpdateCityAsync(City city, CancellationToken cancellationToken = default);
     Task DeleteCityAsync(Guid cityId, CancellationToken cancellationToken = default);
     Task<List<City>> GetTopBookedCitiesAsync(int num, CancellationToken cancellationToken = default);
+    IQueryable<City> GetAllAsQueryable();
 
 }
 

@@ -12,5 +12,7 @@ public interface IHotelRepository
     Task UpdateHotelAsync(Hotel hotel, CancellationToken cancellationToken = default);
     Task DeleteHotelByIdAsync(Guid hotelId, CancellationToken cancellationToken = default);
     Task<HotelRatingStats?> GetRatingStatsByHotelIdAsync(Guid hotelId, CancellationToken cancellationToken = default);
+    Task<List<FeaturedHotelProjection>> GetFeaturedDealsAsync(int count, CancellationToken cancellationToken);
+    IQueryable<Hotel> GetAllAsQueryable();
 }
 
