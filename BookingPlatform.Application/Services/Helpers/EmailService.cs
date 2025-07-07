@@ -1,4 +1,4 @@
-﻿namespace BookingPlatform.Infrastructure.Services;
+﻿namespace BookingPlatform.Application.Services.Helpers;
 
 using BookingPlatform.Core.Models;
 using MailKit.Net.Smtp;
