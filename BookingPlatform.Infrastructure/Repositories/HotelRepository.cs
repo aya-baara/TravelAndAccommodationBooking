@@ -86,5 +86,47 @@ public class HotelRepository : IHotelRepository
         return stats;
     }
 
+    public async Task<List<FeaturedHotelProjection>> GetFeaturedDealsAsync(int count, CancellationToken cancellationToken)
+    {
+        var today = DateTime.UtcNow;
+
+        return await _context.Rooms
+            .Where(r => r.Discounts.Any(d => d.StartDate <= today && d.EndDate >= today))
+            .Include(r => r.Hotel)
+                .ThenInclude(h => h.Thumbnail)
+            .Include(r => r.Hotel.City)
+            .Select(r => new
+            {
+                Hotel = r.Hotel,
+                OriginalPrice = r.PricePerNight,
+                DiscountedPrice = r.Discounts
+                    .Where(d => d.StartDate <= today && d.EndDate >= today)
+                    .OrderByDescending(d => d.Percentage)
+                    .Select(d => r.PricePerNight * (1 - d.Percentage / 100m))
+                    .FirstOrDefault()
+            })
+            .GroupBy(x => x.Hotel.Id)
+            .Select(g => new FeaturedHotelProjection
+            {
+                HotelId = g.Key,
+                HotelName = g.First().Hotel.Name,
+                Location = g.First().Hotel.Location,
+                Thumbnail = g.First().Hotel.Thumbnail ?? null,
+                StarRating = g.First().Hotel.StarRating,
+                OriginalPrice = g.Min(x => x.OriginalPrice),
+                DiscountedPrice = g.Min(x => x.DiscountedPrice)
+            })
+            .OrderBy(h => h.DiscountedPrice)
+            .Take(count)
+            .ToListAsync(cancellationToken);
+    }
+    public IQueryable<Hotel> GetAllAsQueryable()
+    {
+        return _context.Hotels
+            .Include(h => h.Thumbnail)         
+            .Include(h => h.Rooms)
+            .Include(h=>h.Owner);   
+    }
+
 }
 

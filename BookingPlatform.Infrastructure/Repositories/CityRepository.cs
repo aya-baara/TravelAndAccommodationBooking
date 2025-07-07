@@ -61,5 +61,9 @@ public class CityRepository : ICityRepository
     {
         _context.Cities.Update(city);
     }
+    public IQueryable<City> GetAllAsQueryable()
+    {
+        return _context.Cities.Include(c => c.Hotels);
+    }
 }
 
