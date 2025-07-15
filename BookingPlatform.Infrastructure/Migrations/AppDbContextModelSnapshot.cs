@@ -26,7 +26,8 @@ namespace BookingPlatform.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateOnly>("BookingDate")
                         .HasColumnType("date");
@@ -50,9 +51,7 @@ namespace BookingPlatform.Infrastructure.Migrations
                         .HasColumnType("decimal(8,6)");
 
                     b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -72,7 +71,7 @@ namespace BookingPlatform.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -136,7 +135,7 @@ namespace BookingPlatform.Infrastructure.Migrations
                     b.Property<Guid>("CityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FullDescription")
@@ -165,9 +164,6 @@ namespace BookingPlatform.Infrastructure.Migrations
 
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
-
-                    b.Property<double>("ReviewRating")
-                        .HasColumnType("float");
 
                     b.Property<int>("StarRating")
                         .HasColumnType("int");
@@ -338,7 +334,7 @@ namespace BookingPlatform.Infrastructure.Migrations
                     b.Property<int>("ChildrenCapacity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -347,9 +343,6 @@ namespace BookingPlatform.Infrastructure.Migrations
 
                     b.Property<Guid>("HotelId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsAvailble")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
