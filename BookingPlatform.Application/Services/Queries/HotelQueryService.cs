@@ -8,6 +8,7 @@ using BookingPlatform.Core.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Sieve.Services;
 using Microsoft.EntityFrameworkCore;
+using BookingPlatform.Application.SieveConfigurations;
 
 namespace BookingPlatform.Application.Services.Queries;
 
@@ -132,27 +133,34 @@ public class HotelQueryService : IHotelQueryService
         _logger.LogInformation("Admin hotel search initiated. Filters: Page={Page}, PageSize={PageSize}",
             request.Page, request.PageSize);
 
-        var query = _hotelRepository.GetAllAsQueryable()
-            .Select(h => new HotelManagementDto
-            {
-                Name = h.Name,
-                StarRating = h.StarRating,
-                OwnerName = h.Owner.FirstName,
-                RoomCount = h.Rooms.Count,
-                CreatedAt = h.CreatedAt,
-                ModifiedAt = h.ModifiedAt
-            });
+        var query = _hotelRepository.GetAllAsQueryable(); // IQueryable<Hotel>
 
-        var filtered = _sieve.Apply(request, query);
+        var filtered = _sieve.Apply(request, query, applySorting: true, applyFiltering: true);
 
         var total = await filtered.CountAsync(ct);
-        var data = await filtered.ToListAsync(ct);
+
+        var paged = filtered
+            .Skip(((request.Page ?? 1) - 1) * (request.PageSize ?? 10))
+            .Take(request.PageSize ?? 10);
+
+        _logger.LogInformation("Final SQL: {Query}", filtered.ToQueryString());
+
+        var data = await paged.Select(h => new HotelManagementDto
+        {
+            Name = h.Name,
+            StarRating = h.StarRating,
+            OwnerName = h.Owner.FirstName,
+            RoomCount = h.Rooms.Count,
+            CreatedAt = h.CreatedAt,
+            ModifiedAt = h.ModifiedAt
+        }).ToListAsync(ct);
+
 
         _logger.LogInformation("Admin hotel search completed. Total matches: {Total}", total);
 
-
         return new PaginatedResult<HotelManagementDto>(data, total, request.Page ?? 1, request.PageSize ?? 10);
     }
+
 
 }
 

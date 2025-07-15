@@ -32,12 +32,16 @@ public class RoleRepository : IRoleRepository
 
     public async Task<List<User>> GetAdmins(CancellationToken cancellationToken = default)
     {
-        return await _context.Users.Where(u => u.Role.Name == UserRole.Admin).ToListAsync(cancellationToken);
+        return await _context.Users.Where(u => u.Role.Name == RoleType.Admin).ToListAsync(cancellationToken);
     }
 
     public async Task<Role> GetRoleByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Roles.FirstOrDefaultAsync(r => r.Id == id);
+    }
+    public async Task<Role>GetRoleByType(RoleType type,CancellationToken cancellationToken = default)
+    {
+        return await _context.Roles.FirstOrDefaultAsync(r => r.Name == type,cancellationToken);
     }
 
     public async Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default)

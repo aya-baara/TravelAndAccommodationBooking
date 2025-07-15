@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookingPlatform.Application.Dtos.Roles;
 using BookingPlatform.Application.Interfaces.Queries;
+using BookingPlatform.Core.Enums;
 using BookingPlatform.Core.Exceptions;
 using BookingPlatform.Core.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,20 @@ public class RoleQueryService :IRoleQueryService
         }
 
         _logger.LogInformation($"Successfully retrieved Role with ID {id}");
+
+        return _mapper.Map<RoleResponseDto>(role);
+    }
+
+    public async Task<RoleResponseDto> GetRoleByTypeAsync(RoleType roleType, CancellationToken ct)
+    {
+        var role = await _roleRepository.GetRoleByType(roleType, ct);
+        if (role is null)
+        {
+            _logger.LogWarning($"Role with ID {roleType} not found");
+            throw new NotFoundException("The Requested Role Not found");
+        }
+
+        _logger.LogInformation($"Successfully retrieved Role with ID {roleType}");
 
         return _mapper.Map<RoleResponseDto>(role);
     }

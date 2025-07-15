@@ -75,16 +75,16 @@ public class HotelCommandService : IHotelCommandService
 
     public async Task UpdateHotelAsync(UpdateHotelDto dto, CancellationToken cancellationToken)
     {
-        var hotel = await _hotelRepository.GetHotelByIdAsync(dto.HotelId);
+        var hotel = await _hotelRepository.GetHotelByIdAsync(dto.Id);
         if (hotel is null)
         {
-            _logger.LogWarning($"Attempted to update non-existent hotel with ID {dto.HotelId}");
+            _logger.LogWarning($"Attempted to update non-existent hotel with ID {dto.Id}");
             throw new NotFoundException("The Requested Hotel Not found");
         }
         _mapper.Map(dto, hotel);
         await _hotelRepository.UpdateHotelAsync(hotel);
         await _unitOfWork.SaveChangesAsync();
-        _logger.LogInformation($"Hotel Updated successfully with ID {dto.HotelId}");
+        _logger.LogInformation($"Hotel Updated successfully with ID {dto.Id}");
     }
 }
 

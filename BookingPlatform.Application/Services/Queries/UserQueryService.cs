@@ -11,16 +11,19 @@ namespace BookingPlatform.Application.Services.Queries;
 public class UserQueryService : IUserQueryService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IMapper _mapper;
     private readonly ILogger<UserQueryService> _logger;
 
     public UserQueryService(IUserRepository userRepository
+        , IRoleRepository roleRepository
         , ITokenGenerator tokenGenerator
         , IMapper mapper
         , ILogger<UserQueryService> looger)
     {
         _userRepository = userRepository;
+        _roleRepository = roleRepository;
         _tokenGenerator = tokenGenerator;
         _mapper = mapper;
         _logger = looger;
@@ -29,7 +32,7 @@ public class UserQueryService : IUserQueryService
     public async Task<TokenResponseDto> LogInAsync(LogInDto dto, CancellationToken ct)
     {
         _logger.LogInformation("User login attempt for email: {Email}", dto.Email);
-
+       
         var user = await _userRepository.AuthenticateUserAsync(dto.Email, dto.Password, ct);
         if (user is null)
         {
@@ -37,6 +40,7 @@ public class UserQueryService : IUserQueryService
 
             throw new CredentialsNotValidException("Invalid email or password.");
         }
+        user.Role = await _roleRepository.GetRoleByIdAsync(user.RoleId);
 
         _logger.LogInformation("User login successful for email: {Email}", dto.Email);
 
