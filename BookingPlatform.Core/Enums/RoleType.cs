@@ -1,6 +1,6 @@
 ﻿namespace BookingPlatform.Core.Enums;
 
-public enum UserRole
+public enum RoleType
 {
     User = 0,
     Admin = 1,
