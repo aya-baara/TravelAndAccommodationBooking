@@ -5,6 +5,7 @@ using BookingPlatform.Core.Entities;
 using BookingPlatform.Core.Exceptions;
 using BookingPlatform.Core.Interfaces;
 using BookingPlatform.Core.Interfaces.Repositories;
+using BookingPlatform.Core.Interfaces.Services;
 using Microsoft.Extensions.Logging;
 
 namespace BookingPlatform.Application.Services.Commands;
@@ -13,24 +14,27 @@ public class UserCommandService : IUserCommandService
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly IMapper _mapper;
     private readonly ILogger<UserCommandService> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
     public UserCommandService(IUserRepository userRepository
         , IRoleRepository roleRepository
+        , IPasswordHasher passwordHasher
         , IMapper mapper
         , ILogger<UserCommandService> logger
         , IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
+        _passwordHasher = passwordHasher;
         _mapper = mapper;
         _logger = logger;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task SignUpAsync(SignUpDto dto, CancellationToken ct)
+    public async Task SignUpAsync(CreateUserDto dto, CancellationToken ct)
     {
         _logger.LogInformation("User signup attempt for email: {Email}", dto.Email);
 
@@ -49,6 +53,7 @@ public class UserCommandService : IUserCommandService
 
         var userToAdd = _mapper.Map<User>(dto);
         userToAdd.Role = role;
+        userToAdd.Password = _passwordHasher.HashPassword(dto.Password);
 
         await _userRepository.CreateUserAsync(userToAdd, ct);
         await _unitOfWork.SaveChangesAsync();

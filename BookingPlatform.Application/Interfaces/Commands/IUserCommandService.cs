@@ -4,6 +4,6 @@ namespace BookingPlatform.Application.Interfaces.Commands;
 
 public interface IUserCommandService
 {
-    Task SignUpAsync(SignUpDto dto, CancellationToken ct);
+    Task SignUpAsync(CreateUserDto dto, CancellationToken ct);
 }
 
