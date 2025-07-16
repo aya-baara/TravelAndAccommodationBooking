@@ -4,6 +4,6 @@ namespace BookingPlatform.Core.Interfaces.Services;
 
 public interface IBookingHtmlBuilder
 {
-    string BuildConfirmationHtml(Booking booking);
+    Task<string> BuildConfirmationHtml(Booking booking);
 }
 

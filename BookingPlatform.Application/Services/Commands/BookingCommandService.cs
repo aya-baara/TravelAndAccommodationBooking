@@ -40,16 +40,7 @@ public class BookingCommandService : IBookingCommandService
 
     public async Task<BookingResponseDto> CreateBookingAsync(CreateBookingDto request, Guid userId, CancellationToken cancellationToken)
     {
-        var rooms = new List<Room>();
-
-        foreach (var roomId in request.RoomIds)
-        {
-            var room = await _roomRepository.GetRoomByIdAsync(roomId, cancellationToken);
-            if (room is null)
-                throw new NotFoundException($"Room with ID {roomId} not found");
-
-            rooms.Add(room);
-        }
+        var rooms = await GetRoomsByIdsAsync(request.RoomIds, cancellationToken);
 
         var bookingToCreate = new Booking
         {
@@ -61,9 +52,23 @@ public class BookingCommandService : IBookingCommandService
             BookingDate = DateOnly.FromDateTime(DateTime.UtcNow),
         };
         var booking = await _bookingCreationService.CreateBookingAsync(bookingToCreate, cancellationToken);
-        await _unitOfWork.SaveChangesAsync();
         await _notificationService.SendBookingConfirmationAsync(booking, cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<BookingResponseDto>(booking);
+    }
+
+    private async Task<List<Room>> GetRoomsByIdsAsync(IEnumerable<Guid> roomIds, CancellationToken ct)
+    {
+        var rooms = new List<Room>();
+
+        foreach (var roomId in roomIds)
+        {
+            var room = await _roomRepository.GetRoomByIdAsync(roomId, ct);
+            if (room is null)
+                throw new NotFoundException($"Room with ID {roomId} not found");
+            rooms.Add(room);
+        }
+        return rooms;
     }
 
     public async Task DeleteBookingAsync(Guid id, Guid userId, CancellationToken cancellationToken)

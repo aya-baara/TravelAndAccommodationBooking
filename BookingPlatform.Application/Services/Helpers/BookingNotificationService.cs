@@ -21,8 +21,8 @@ public class BookingNotificationService : IBookingNotificationService
 
     public async Task SendBookingConfirmationAsync(Booking booking, CancellationToken ct)
     {
-        var html = _htmlBuilder.BuildConfirmationHtml(booking);
-        var pdf = _pdfService.GeneratePdfFromHtml(html);
+        var html = await _htmlBuilder.BuildConfirmationHtml(booking);
+        var pdf =  _pdfService.GeneratePdfFromHtml(html);
 
         var email = new EmailMessage
         {
@@ -31,7 +31,7 @@ public class BookingNotificationService : IBookingNotificationService
             Body = "Your booking is confirmed.",
             Attachments = new List<EmailAttachment>
             {
-                new EmailAttachment { FileName = "confirmation.pdf", Content = pdf }
+                new EmailAttachment { FileName = "confirmation.pdf", Content = pdf,ContentType = "application/pdf" }
             }
         };
 

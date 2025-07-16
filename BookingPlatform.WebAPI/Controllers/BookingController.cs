@@ -50,7 +50,7 @@ public class BookingController : ControllerBase
         };
 
         var createdBooking = await _bookingCommandService.CreateBookingAsync(bookingDto, userId, cancellationToken);
-        return CreatedAtAction(nameof(GetBookingById), new { id = createdBooking.Id }, createdBooking);
+        return Created();
     }
 
     /// <summary>
