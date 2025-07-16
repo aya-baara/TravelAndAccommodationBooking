@@ -12,6 +12,7 @@ public class HotelProfile : Profile
         CreateMap<UpdateHotelDto, Hotel>();
         CreateMap<Hotel, HotelResponseDto>();
         CreateMap<Hotel, HotelDetailsDto>();
+        CreateMap<Hotel, HotelSearchDto>();
     }
 }
 
