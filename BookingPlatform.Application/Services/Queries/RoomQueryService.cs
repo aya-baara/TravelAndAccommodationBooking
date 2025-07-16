@@ -6,6 +6,7 @@ using BookingPlatform.Core.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Sieve.Services;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Models;
 
 
 namespace BookingPlatform.Application.Services.Queries;
@@ -54,7 +55,7 @@ public class RoomQueryService : IRoomQueryService
 
         return _mapper.Map<List<RoomResponseDto>>(rooms);
     }
-    public async Task<PaginatedResult<RoomManagementDto>> SearchRoomsAsync(RoomAdminSearchRequest request, CancellationToken ct)
+    public async Task<PaginatedResult<RoomManagementDto>> SearchRoomsAsync(SieveModel request, CancellationToken ct)
     {
         _logger.LogInformation("Admin room search initiated. Page: {Page}, PageSize: {PageSize}",
             request.Page, request.PageSize);

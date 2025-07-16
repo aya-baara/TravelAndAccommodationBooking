@@ -4,6 +4,7 @@ using BookingPlatform.Application.Interfaces.Queries;
 using BookingPlatform.Core.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
 
 namespace BookingPlatform.WebAPI.Controllers;
 
@@ -132,7 +133,7 @@ public class RoomController : ControllerBase
     [ProducesResponseType(typeof(PaginatedResult<RoomManagementDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<PaginatedResult<RoomManagementDto>>> SearchRoomsAdmin([FromQuery] RoomAdminSearchRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedResult<RoomManagementDto>>> SearchRoomsAdmin([FromQuery] SieveModel request, CancellationToken cancellationToken)
     {
         var result = await _roomQueryService.SearchRoomsAsync(request, cancellationToken);
         return Ok(result);

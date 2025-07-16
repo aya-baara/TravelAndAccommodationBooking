@@ -5,11 +5,8 @@ using BookingPlatform.Application.Services.Helpers;
 using BookingPlatform.Application.Services.Queries;
 using BookingPlatform.Core.Interfaces.Repositories;
 using BookingPlatform.Core.Interfaces;
-using BookingPlatform.Infrastructure.Data;
 using BookingPlatform.Infrastructure.Repositories;
 using BookingPlatform.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using BookingPlatform.Application.SieveConfigurations;
 using BookingPlatform.Core.Interfaces.Services;
 using Sieve.Services;
 using BookingPlatform.Infrastructure.Services;
@@ -54,14 +51,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRoleQueryService, RoleQueryService>();
 
         services.AddScoped<ISieveProcessor, SieveProcessor>();
-        // Register all custom Sieve configurations
-        //services.AddScoped<ISieveCustomConfiguration, HotelSieveConfiguration>();
-        //services.AddScoped<ISieveCustomConfiguration, CitySieveConfiguration>();
-        //services.AddScoped<ISieveCustomConfiguration, RoomSieveConfiguration>();
-        services.AddScoped<ISieveCustomConfiguration, HotelManagementSieveConfiguration>();
-
-        // Register the composite config as the only ISieveConfiguration
-        services.AddScoped<ISieveConfiguration, CompositeSieveConfiguration>();
 
         services.AddScoped<IBookingNotificationService, BookingNotificationService>();
         services.AddScoped<IBookingCreationService, BookingCreationService>();
