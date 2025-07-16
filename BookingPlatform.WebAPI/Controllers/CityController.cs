@@ -4,6 +4,7 @@ using BookingPlatform.Application.Interfaces.Queries;
 using BookingPlatform.Core.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sieve.Models;
 
 namespace BookingPlatform.WebAPI.Controllers;
 
@@ -127,7 +128,7 @@ public class CityController : ControllerBase
     [ProducesResponseType(typeof(PaginatedResult<CityManagementDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> SearchCities([FromQuery] CityAdminSearchRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> SearchCities([FromQuery] SieveModel request, CancellationToken cancellationToken)
     {
         var result = await _cityQueryService.SearchCitiesAsync(request, cancellationToken);
         return Ok(result);

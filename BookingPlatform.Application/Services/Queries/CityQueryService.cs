@@ -7,6 +7,7 @@ using BookingPlatform.Core.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Sieve.Services;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Models;
 
 
 namespace BookingPlatform.Application.Services.Queries;
@@ -51,7 +52,7 @@ public class CityQueryService : ICityQueryService
         _logger.LogInformation($"Successfully The Top {num} visited cities ");
         return _mapper.Map<List<CityResponseDto>>(cities);
     }
-    public async Task<PaginatedResult<CityManagementDto>> SearchCitiesAsync(CityAdminSearchRequest request, CancellationToken ct)
+    public async Task<PaginatedResult<CityManagementDto>> SearchCitiesAsync(SieveModel request, CancellationToken ct)
     {
         var query = _cityRepository.GetAllAsQueryable()
             .Select(c => new CityManagementDto
