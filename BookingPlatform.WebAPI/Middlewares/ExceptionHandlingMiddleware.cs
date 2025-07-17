@@ -45,6 +45,12 @@ public class ExceptionHandlingMiddleware
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await WriteErrorAsync(context, ex.Message);
         }
+        catch (ForbiddenAccessException ex)
+        {
+            _logger.LogWarning(ex, "Forbidden");
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await WriteErrorAsync(context, ex.Message);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception");
