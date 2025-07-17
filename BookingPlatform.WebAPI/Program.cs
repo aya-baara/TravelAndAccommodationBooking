@@ -65,7 +65,7 @@ builder.Services.AddSwaggerGen(options =>
     // Add Swagger document info
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "MinimalAPI",
+        Title = "BookingPlatform API",
         Version = "v1"
     });
 

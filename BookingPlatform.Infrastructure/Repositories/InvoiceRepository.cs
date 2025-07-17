@@ -19,9 +19,9 @@ public class InvoiceRepository : IInvoiceRopsitory
         return result.Entity;
     }
 
-    public async Task DeleteInvoiceAsync(Guid invoiceId, CancellationToken cancellationToken = default)
+    public async Task DeleteInvoiceAsync(Guid bookingId, CancellationToken cancellationToken = default)
     {
-        var invoice = await GetInvoiceByIdAsync(invoiceId, cancellationToken);
+        var invoice = await GetInvoiceByBookingIdAsync(bookingId, cancellationToken);
         if (invoice != null)
         {
             _context.Invoices.Remove(invoice);
@@ -33,6 +33,7 @@ public class InvoiceRepository : IInvoiceRopsitory
     {
         return await _context.Invoices
             .Include(i=>i.Booking)
+            .AsNoTracking()
             .FirstOrDefaultAsync(i => i.BookingId == bookingId, cancellationToken);
     }
 
