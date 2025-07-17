@@ -13,7 +13,6 @@ using FluentValidation;
 using BookingPlatform.WebAPI.Extensions;
 using System.Text.Json.Serialization;
 using BookingPlatform.WebAPI.Helpers;
-using BookingPlatform.Application.Mapping;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -101,7 +100,10 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddAutoMapper(typeof(OwnerProfile).Assembly);
+builder.Services.AddAutoMapper(
+    typeof(BookingPlatform.Application.Mapping.ReviewProfile).Assembly,
+    typeof(BookingPlatform.WebAPI.Mapping.ReviewRequestProfile).Assembly
+);
 builder.Services.AddFluentValidationAutoValidation(); // Auto model validation
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(); // Scan validators
 

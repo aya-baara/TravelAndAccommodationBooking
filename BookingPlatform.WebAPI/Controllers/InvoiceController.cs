@@ -61,7 +61,7 @@ public class InvoiceController : ControllerBase
 
     public async Task<IActionResult> GetInvoiceById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.GetUserId(); ;
+        var userId = User.GetUserId();
         var result = await _invoiceQueryService.GetInvoiceById(id, userId, cancellationToken);
         return Ok(result);
     }
