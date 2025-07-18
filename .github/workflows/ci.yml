@@ -1,0 +1,40 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches: [ master]
+  pull_request:
+    branches: [ master]
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.sln'
+
+env:
+    DOTNET_VERSION: '9.0.x'
+
+jobs:
+  build-and-test:
+    name: Build and Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - name: ⬇️ Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🛠️ Setup .NET 9 (preview)
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: 📦 Restore dependencies
+      run: dotnet restore BookingPlatform.sln
+
+    - name: 🧱 Build all projects
+      run: dotnet build BookingPlatform.sln --configuration Release --no-restore
+
+    - name: ✅ Run Tests
+      run: dotnet test BookingPlatform.Tests/BookingPlatform.Tests.csproj --no-restore --verbosity normal
