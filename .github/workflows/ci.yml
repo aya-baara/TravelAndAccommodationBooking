@@ -11,7 +11,7 @@ on:
       - '**/*.sln'
 
 env:
-  DOTNET_VERSION: '9.0.100-preview.7'
+    DOTNET_VERSION: '9.0.x'
 
 jobs:
   build-and-test:
