@@ -10,7 +10,6 @@ public class Hotel : BaseEntity, IAuditableEntity
     public City City { get; set; }
     public Guid CityId { get; set; }
     public int StarRating { get; set; }
-    public double ReviewRating { get; set; }
     public string FullDescription { get; set; }
     public string BriefDescription { get; set; }
     public int PhoneNumber { get; set; }
@@ -27,6 +26,6 @@ public class Hotel : BaseEntity, IAuditableEntity
     public List<Image> Images { get; set; } = new List<Image>();
     public Image? Thumbnail { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime? ModifiedAt { get; set; }
+    public DateTime ModifiedAt { get; set; }
 
 }

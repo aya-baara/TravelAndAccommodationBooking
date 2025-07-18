@@ -35,6 +35,11 @@ public class RoleRepository : IRoleRepository
         return await _context.Users.Where(u => u.Role.Name == UserRole.Admin).ToListAsync(cancellationToken);
     }
 
+    public async Task<Role> GetRoleByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Roles.FirstOrDefaultAsync(r => r.Id == id);
+    }
+
     public async Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Roles.ToListAsync(cancellationToken);

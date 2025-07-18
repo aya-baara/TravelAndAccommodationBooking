@@ -25,11 +25,42 @@ public class BookingRepository : IBookingRepository
         return _context.Bookings.Where(b => b.UserId == userId).ToListAsync(cancellationToken);
     }
 
-    public Task<List<Booking>> GetRecentlyBookingByUserIdAsync(Guid userId
+    public async Task<List<Booking>> GetRecentlyBookingByUserIdAsync(Guid userId, int num
         , CancellationToken cancellationToken = default)
     {
-        return _context.Bookings.Where(b => b.UserId == userId)
-            .OrderByDescending(b => b.BookingDate).Take(3).ToListAsync(cancellationToken);
+        return await _context.Bookings
+         .Include(b => b.Rooms).ThenInclude(r => r.Hotel).ThenInclude(h => h.Thumbnail)
+         .Include(b => b.Rooms).ThenInclude(r => r.Hotel.City)
+         .Include(b => b.Invoice)
+         .Where(b => b.UserId == userId)
+         .OrderByDescending(b => b.BookingDate)
+         .Take(num)
+         .ToListAsync(cancellationToken);
+    }
+    public async Task<Booking?> GetBookingById(Guid bookingId, CancellationToken cancellationToken)
+    {
+        return await _context.Bookings.FirstOrDefaultAsync(b => b.Id == bookingId, cancellationToken);
+
+    }
+    public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateTime checkIn, DateTime checkOut, CancellationToken ct)
+    {
+        return !await _context.Bookings
+            .Where(b => b.Rooms.Any(r => r.Id == roomId))
+            .AnyAsync(b =>
+                (checkIn < b.CheckOut && checkOut > b.CheckIn), ct);
+    }
+    public async Task UpdateBookingAsync(Booking booking, CancellationToken cancellationToken)
+    {
+        _context.Bookings.Update(booking);
+    }
+    public async Task DeleteBookingAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var booking = await GetBookingById(id, cancellationToken);
+        if (booking != null)
+        {
+            _context.Bookings.Remove(booking);
+        }
+
     }
 }
 

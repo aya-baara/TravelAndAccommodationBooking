@@ -9,7 +9,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
     public void Configure(EntityTypeBuilder<Booking> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.Property(b=>b.UserId).HasDefaultValueSql("NEWID()");
+        builder.Property(b=>b.Id).HasDefaultValueSql("NEWID()");
 
         builder.HasOne(b => b.User)
             .WithMany()

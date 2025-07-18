@@ -54,5 +54,12 @@ public class DiscountRepository : IDiscountRepository
     {
         _context.Discounts.Update(discount);
     }
+    public async Task<Discount?> GetValidDiscountForRoomAsync(Guid roomId, DateTime checkIn, DateTime checkOut, CancellationToken cancellationToken)
+    {
+        return await _context.Discounts
+            .Where(d => d.RoomId == roomId && d.StartDate <= checkOut && d.EndDate >= checkIn)
+            .OrderByDescending(d => d.Percentage)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }
 

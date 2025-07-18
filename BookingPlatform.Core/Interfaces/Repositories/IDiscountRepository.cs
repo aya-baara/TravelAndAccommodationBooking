@@ -11,6 +11,7 @@ public interface IDiscountRepository
         , CancellationToken cancellationToken = default);
     Task UpdateDiscountAsync(Discount discount, CancellationToken cancellationToken = default);
     Task DeleteDiscountByIdAsync(Guid discountId, CancellationToken cancellationToken = default);
+    Task<Discount?> GetValidDiscountForRoomAsync(Guid roomId, DateTime checkIn, DateTime checkOut, CancellationToken cancellationToken =default);
 
 }
 

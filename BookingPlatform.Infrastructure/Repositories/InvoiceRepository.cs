@@ -31,7 +31,9 @@ public class InvoiceRepository : IInvoiceRopsitory
     public async Task<Invoice?> GetInvoiceByBookingIdAsync(Guid bookingId
         , CancellationToken cancellationToken = default)
     {
-        return await _context.Invoices.FirstOrDefaultAsync(i => i.BookingId == bookingId, cancellationToken);
+        return await _context.Invoices
+            .Include(i=>i.Booking)
+            .FirstOrDefaultAsync(i => i.BookingId == bookingId, cancellationToken);
     }
 
     public async Task<Invoice?> GetInvoiceByIdAsync(Guid invoiceId, CancellationToken cancellationToken = default)
