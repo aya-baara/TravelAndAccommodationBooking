@@ -21,7 +21,7 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(i => i.TotalAmount)
-            .HasPrecision(8, 6);
+            .HasColumnType("decimal(18,2)");
 
     }
 }

@@ -3,7 +3,7 @@ namespace BookingPlatform.Application.Dtos.Hotels;
 
 public class UpdateHotelDto
 {
-    public Guid HotelId { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public string Location { get; set; }
     public Guid CityId { get; set; }

@@ -5,6 +5,6 @@ public class CreateOwnerDto
     public string LastName { get; set; }
     public int PhoneNumber { get; set; }
     public string Email { get; set; }
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 }
 

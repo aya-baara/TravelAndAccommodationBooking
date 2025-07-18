@@ -8,6 +8,8 @@ using BookingPlatform.Core.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using Sieve.Services;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Models;
+using BookingPlatform.Application.Dtos.Rooms;
 
 namespace BookingPlatform.Application.Services.Queries;
 
@@ -85,8 +87,8 @@ public class HotelQueryService : IHotelQueryService
 
         if (request.CheckIn.HasValue && request.CheckOut.HasValue)
         {
-            var checkIn = request.CheckIn.Value;
-            var checkOut = request.CheckOut.Value;
+            var checkIn = request.CheckIn.Value.ToDateTime(TimeOnly.MinValue);
+            var checkOut = request.CheckOut.Value.ToDateTime(TimeOnly.MinValue);
             var adults = request.Adults;
             var children = request.Children;
 
@@ -99,20 +101,61 @@ public class HotelQueryService : IHotelQueryService
                     )
                 )
             );
+
+            if (request.Rooms > 1)
+            {
+                query = query.Where(h =>
+                    h.Rooms.Count(r =>
+                        r.Bookings.All(b =>
+                            b.CheckOut <= checkIn || b.CheckIn >= checkOut
+                        )
+                    ) >= request.Rooms
+                );
+            }
         }
 
-        if (request.Rooms > 1)
+        var projected = query.Select(h => new HotelSearchDto
         {
-            query = query.Where(h =>
-                h.Rooms.Count(r =>
-                    r.Bookings.All(b =>
-                        b.CheckOut <= request.CheckIn || b.CheckIn >= request.CheckOut
-                    )
-                ) >= request.Rooms
-            );
-        }
+            Name = h.Name,
+            StarRating = h.StarRating,
+            Location = h.Location,
+            BriefDescription = h.BriefDescription,
 
-        var filtered = _sieve.Apply(request, query);
+            PricePerNight = h.Rooms
+                .OrderBy(r => r.PricePerNight)
+                .Select(r => r.PricePerNight)
+                .FirstOrDefault(),
+
+            Rooms = request.CheckIn.HasValue && request.CheckOut.HasValue
+                ? h.Rooms
+                    .Where(r =>
+                        r.AdultCapacity >= request.Adults &&
+                        r.ChildrenCapacity >= request.Children &&
+                        r.Bookings.All(b =>
+                            b.CheckOut <= request.CheckIn.Value.ToDateTime(TimeOnly.MinValue) ||
+                            b.CheckIn >= request.CheckOut.Value.ToDateTime(TimeOnly.MinValue)
+                        )
+                    )
+                    .Select(r => new RoomResponseDto
+                    {
+                        Id = r.Id,
+                        PricePerNight = r.PricePerNight,
+                        AdultCapacity = r.AdultCapacity,
+                        ChildrenCapacity = r.ChildrenCapacity,
+                        HotelId = r.HotelId,
+                        Description = r.Description
+                        
+                    })
+                    .ToList()
+                : h.Rooms.Select(r => new RoomResponseDto
+                {
+                    PricePerNight = r.PricePerNight,
+                    AdultCapacity = r.AdultCapacity,
+                    ChildrenCapacity = r.ChildrenCapacity
+                }).ToList()
+        });
+
+        var filtered = _sieve.Apply(request, projected);
 
         var total = await filtered.CountAsync(ct);
         var data = await filtered.ToListAsync(ct);
@@ -120,39 +163,44 @@ public class HotelQueryService : IHotelQueryService
         _logger.LogInformation("Hotel search completed. Total results: {Total}", total);
 
         return new PaginatedResult<HotelSearchDto>(
-            _mapper.Map<List<HotelSearchDto>>(data),
+            data,
             total,
             request.Page ?? 1,
             request.PageSize ?? 10
         );
     }
 
-    public async Task<PaginatedResult<HotelManagementDto>> SearchHotelsAdminAsync(HotelAdminSearchRequest request, CancellationToken ct)
+    public async Task<PaginatedResult<HotelManagementDto>> SearchHotelsAdminAsync(SieveModel request, CancellationToken ct)
     {
         _logger.LogInformation("Admin hotel search initiated. Filters: Page={Page}, PageSize={PageSize}",
             request.Page, request.PageSize);
 
         var query = _hotelRepository.GetAllAsQueryable()
-            .Select(h => new HotelManagementDto
-            {
-                Name = h.Name,
-                StarRating = h.StarRating,
-                OwnerName = h.Owner.FirstName,
-                RoomCount = h.Rooms.Count,
-                CreatedAt = h.CreatedAt,
-                ModifiedAt = h.ModifiedAt
-            });
+                .Select(h => new HotelManagementDto
+                {
+                    Name = h.Name,
+                    StarRating = h.StarRating,
+                    OwnerName = h.Owner.FirstName,
+                    RoomCount = h.Rooms.Count,
+                    CreatedAt = h.CreatedAt,
+                    ModifiedAt = h.ModifiedAt
+                });
 
         var filtered = _sieve.Apply(request, query);
 
         var total = await filtered.CountAsync(ct);
-        var data = await filtered.ToListAsync(ct);
+
+        var data = await filtered.ToListAsync();
 
         _logger.LogInformation("Admin hotel search completed. Total matches: {Total}", total);
 
+        _logger.LogInformation("Final SQL: {Query}", filtered.ToQueryString());
+
+        _logger.LogInformation("Admin hotel search completed. Total matches: {Total}", total);
 
         return new PaginatedResult<HotelManagementDto>(data, total, request.Page ?? 1, request.PageSize ?? 10);
     }
+
 
 }
 

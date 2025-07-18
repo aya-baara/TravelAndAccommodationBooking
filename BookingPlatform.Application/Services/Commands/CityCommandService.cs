@@ -30,7 +30,7 @@ public class CityCommandService : ICityCommandService
     public async Task<CityResponseDto> CreateCityAsync(CreateCityDto dto, CancellationToken cancellationToken)
     {
         var city = _mapper.Map<City>(dto);
-        var createdCity =await _cityRepository.CreateCityAsync(city, cancellationToken);
+        var createdCity = await _cityRepository.CreateCityAsync(city, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
         _logger.LogInformation($"City created successfully with ID {createdCity.Id}");
@@ -56,11 +56,11 @@ public class CityCommandService : ICityCommandService
 
     public async Task UpdateCityAsync(UpdateCityDto dto, CancellationToken cancellationToken)
     {
-        var city = await _cityRepository.GetCityByIdAsync(dto.CityId, cancellationToken);
+        var city = await _cityRepository.GetCityByIdAsync(dto.Id, cancellationToken);
 
         if (city is null)
         {
-            _logger.LogWarning($"Attempted to delete non-existent city with ID {dto.CityId}");
+            _logger.LogWarning($"Attempted to delete non-existent city with ID {dto.Id}");
 
             throw new NotFoundException("The Requested City Not found");
         }
@@ -68,7 +68,7 @@ public class CityCommandService : ICityCommandService
         await _cityRepository.UpdateCityAsync(city);
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation($"City updated successfully with ID {dto.CityId}");
+        _logger.LogInformation($"City updated successfully with ID {dto.Id}");
     }
 }
 

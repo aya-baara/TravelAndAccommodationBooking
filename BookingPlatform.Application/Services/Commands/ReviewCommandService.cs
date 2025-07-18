@@ -57,13 +57,18 @@ public class ReviewCommandService : IReviewCommandService
         return _mapper.Map<ReviewResponseDto>(created);
     }
 
-    public async Task DeleteReview(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteReview(Guid id, Guid userId,CancellationToken cancellationToken)
     {
         var review =await _reviewRepository.GetReviewByIdAsync(id, cancellationToken);
         if(review is null)
         {
             _logger.LogWarning($"Attempted to Delete non-existent Review {id}");
             throw new NotFoundException("The Requested Review Not found");
+        }
+        if (review.UserId != userId)
+        {
+            _logger.LogWarning($"Unauthorized attempt to Delete Review  {review.Id} by user {userId}");
+            throw new ForbiddenAccessException("You are not allowed to access this Review.");
         }
         await _reviewRepository.DeleteReviewById(id,cancellationToken);
         await _unitOfWork.SaveChangesAsync();
@@ -84,6 +89,11 @@ public class ReviewCommandService : IReviewCommandService
         {
             _logger.LogWarning($"Attempted to Add Review to non-existent User with ID {dto.UserId}");
             throw new NotFoundException("The Requested User Not found");
+        }
+        if (review.UserId != dto.UserId)
+        {
+            _logger.LogWarning($"Unauthorized attempt to Update Review  {dto.Id} by user {dto.UserId}");
+            throw new ForbiddenAccessException("You are not allowed to access this Review.");
         }
         var hotel = await _hotelRepository.GetHotelByIdAsync(dto.HotelId, cancellationToken);
         if (hotel is null)

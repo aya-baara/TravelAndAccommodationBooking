@@ -8,7 +8,8 @@ public class InvoiceProfile : Profile
 {
     public InvoiceProfile()
     {
-        CreateMap<CreateInvoiceDto, Invoice>();
+        CreateMap<CreateInvoiceDto, Invoice>()
+            .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.BookingId));
         CreateMap<UpdateInvoiceDto, Invoice>();
         CreateMap<Invoice, InvoiceResponseDto>();
     }

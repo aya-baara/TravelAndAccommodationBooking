@@ -8,7 +8,8 @@ public class UserProfile :Profile
 {
     public UserProfile()
     {
-        CreateMap<SignUpDto, User>();
+        CreateMap<CreateUserDto, User>();
+        CreateMap<SignUpDto, CreateUserDto>();
     }
 }
 

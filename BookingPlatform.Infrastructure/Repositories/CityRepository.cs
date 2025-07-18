@@ -42,19 +42,33 @@ public class CityRepository : ICityRepository
 
     public async Task<List<City>> GetTopBookedCitiesAsync(int num, CancellationToken cancellationToken = default)
     {
-        return await _context.Bookings
-       .Where(b => b.Rooms.Any())
-       .Select(b => b.Rooms.First().Hotel.City)
-       .GroupBy(city => city.Id)
-       .Select(g => new
-       {
-           City = g.First(),
-           Count = g.Count()
-       })
-       .OrderByDescending(x => x.Count)
-       .Take(num)
-       .Select(x => x.City)
-       .ToListAsync();
+        var cities = await _context.Bookings
+            .SelectMany(b => b.Rooms)
+            .Where(r => r.Hotel != null && r.Hotel.City != null)
+            .GroupBy(r => new
+            {
+                r.Hotel.City.Id,
+                r.Hotel.City.Name,
+                r.Hotel.City.Description,
+                r.Hotel.City.Country
+            })
+            .Select(g => new
+            {
+                City = new City
+                {
+                    Id = g.Key.Id,
+                    Name = g.Key.Name,
+                    Description = g.Key.Description,
+                    Country = g.Key.Country
+                },
+                Count = g.Count()
+            })
+            .OrderByDescending(x => x.Count)
+            .Take(num)
+            .Select(x => x.City)
+            .ToListAsync(cancellationToken);
+
+        return cities;
     }
 
     public async Task UpdateCityAsync(City city, CancellationToken cancellationToken = default)

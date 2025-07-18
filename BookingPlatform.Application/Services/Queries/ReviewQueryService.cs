@@ -22,13 +22,15 @@ public class ReviewQueryService : IReviewQueryService
         _logger = logger;
     }
 
-    public async Task<List<ReviewResponseDto>> GetHotelReviews(Guid id, CancellationToken cancellationToken, int page, int size)
+    public async Task<PaginatedResult<ReviewResponseDto>> GetHotelReviews(Guid id, CancellationToken cancellationToken, int page, int size)
     {
         var reviews = await _reviewRepository.GetReviewsByHotelIdAsync(id, page, size, cancellationToken);
 
         _logger.LogInformation($"Successfully retrieved Reviews with Hotel ID {id}");
 
-        return _mapper.Map<List<ReviewResponseDto>>(reviews);
+        var mappedItems = _mapper.Map<List<ReviewResponseDto>>(reviews.Items);
+
+        return new PaginatedResult<ReviewResponseDto>(mappedItems, reviews.Items.Count(), page, size);
     }
     public async Task<ReviewResponseDto> GetReviewByIdAsync(Guid id, CancellationToken cancellationToken)
     {

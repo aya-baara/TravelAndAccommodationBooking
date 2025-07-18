@@ -90,20 +90,31 @@ public class HotelRepository : IHotelRepository
     {
         var today = DateTime.UtcNow;
 
-        return await _context.Rooms
+        var discountedRooms = await _context.Rooms
             .Where(r => r.Discounts.Any(d => d.StartDate <= today && d.EndDate >= today))
-            .Include(r => r.Hotel)
-                .ThenInclude(h => h.Thumbnail)
-            .Include(r => r.Hotel.City)
-            .Select(r => new
+            .Include(r => r.Discounts)
+            .Include(r => r.Hotel).ThenInclude(h => h.City)
+            //.Include(r => r.Hotel.Thumbnail)
+            .ToListAsync(cancellationToken);
+
+        var result = discountedRooms
+            .Select(r =>
             {
-                Hotel = r.Hotel,
-                OriginalPrice = r.PricePerNight,
-                DiscountedPrice = r.Discounts
+                var bestDiscount = r.Discounts
                     .Where(d => d.StartDate <= today && d.EndDate >= today)
                     .OrderByDescending(d => d.Percentage)
-                    .Select(d => r.PricePerNight * (1 - d.Percentage / 100m))
-                    .FirstOrDefault()
+                    .FirstOrDefault();
+
+                var discountedPrice = bestDiscount != null
+                    ? r.PricePerNight * (1m - bestDiscount.Percentage / 100m)
+                    : r.PricePerNight;
+
+                return new
+                {
+                    Hotel = r.Hotel,
+                    OriginalPrice = r.PricePerNight,
+                    DiscountedPrice = discountedPrice
+                };
             })
             .GroupBy(x => x.Hotel.Id)
             .Select(g => new FeaturedHotelProjection
@@ -111,19 +122,21 @@ public class HotelRepository : IHotelRepository
                 HotelId = g.Key,
                 HotelName = g.First().Hotel.Name,
                 Location = g.First().Hotel.Location,
-                Thumbnail = g.First().Hotel.Thumbnail ?? null,
                 StarRating = g.First().Hotel.StarRating,
+               // Thumbnail = g.First().Hotel.Thumbnail?.Path ?? "",
                 OriginalPrice = g.Min(x => x.OriginalPrice),
                 DiscountedPrice = g.Min(x => x.DiscountedPrice)
             })
             .OrderBy(h => h.DiscountedPrice)
             .Take(count)
-            .ToListAsync(cancellationToken);
+            .ToList();
+        return result;
+
     }
+
     public IQueryable<Hotel> GetAllAsQueryable()
     {
-        return _context.Hotels
-            .Include(h => h.Thumbnail)         
+        return _context.Hotels      
             .Include(h => h.Rooms)
             .Include(h=>h.Owner);   
     }

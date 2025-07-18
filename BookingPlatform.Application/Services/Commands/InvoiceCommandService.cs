@@ -38,38 +38,42 @@ public class InvoiceCommandService : IInvoiceCommandService
             throw new NotFoundException("The Requested Booking Not found");
         }
         var invoice = _mapper.Map<Invoice>(dto);
+        invoice.TotalAmount = booking.TotalPriceBeforeDiscount;
         var created = await _invoiceRopsitory.CreateInvoiceAsync(invoice, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
+        var createdWithBooking = await _invoiceRopsitory.GetInvoiceByBookingIdAsync(created.BookingId, cancellationToken);
+
 
         _logger.LogInformation($"Invoice Created successfully with ID {created.Id}");
 
         return _mapper.Map<InvoiceResponseDto>(created);
     }
 
-    public async Task DeleteInvoiceAsync(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteInvoiceAsync(Guid bookingId, CancellationToken cancellationToken)
     {
-        var invoice = await _invoiceRopsitory.GetInvoiceByIdAsync(id, cancellationToken);
+        var invoice = await _invoiceRopsitory.GetInvoiceByBookingIdAsync(bookingId, cancellationToken);
         if (invoice is null)
         {
-            _logger.LogWarning($"Attempted to Delete non-existent Invoice {id}");
+            _logger.LogWarning($"Attempted to Delete non-existent Invoice with booking id {bookingId}");
             throw new NotFoundException("The Requested Invoice Not found");
         }
-        await _invoiceRopsitory.DeleteInvoiceAsync(id, cancellationToken);
+        await _invoiceRopsitory.DeleteInvoiceAsync(bookingId, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation($"Invoice Deleted successfully with ID {id}");
+        _logger.LogInformation($"Invoice Deleted successfully with booking ID {bookingId}");
     }
 
     public async Task UpdateInvoiceAsync(UpdateInvoiceDto dto, CancellationToken cancellationToken)
     {
-        var invoice = await _invoiceRopsitory.GetInvoiceByIdAsync(dto.Id, cancellationToken);
+        var invoice = await _invoiceRopsitory.GetInvoiceByBookingIdAsync(dto.BookingId, cancellationToken);
         if (invoice is null)
         {
             _logger.LogWarning($"Attempted to Delete non-existent Invoice {dto.Id}");
             throw new NotFoundException("The Requested Invoice Not found");
         }
-        _mapper.Map(dto, invoice);
-        await _invoiceRopsitory.UpdateInvoiceAsync(invoice, cancellationToken);
+        var updated=_mapper.Map<Invoice>(dto);
+        updated.Id = invoice.Id;
+        await _invoiceRopsitory.UpdateInvoiceAsync(updated, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
         _logger.LogInformation($"Invoice updated successfully with ID {dto.Id}");

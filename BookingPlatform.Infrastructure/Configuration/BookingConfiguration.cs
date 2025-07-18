@@ -20,9 +20,10 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
             .WithMany(r => r.Bookings);
 
         builder.Property(b => b.TotalPriceAfterDiscount)
-            .HasPrecision(8, 6);
+            .HasColumnType("decimal(18,2)");
+
         builder.Property(b => b.TotalPriceBeforeDiscount)
-            .HasPrecision(8, 6);
+            .HasColumnType("decimal(18,2)");
     }
 }
 
