@@ -176,7 +176,7 @@ public class ReviewCommandServiceTests
     {
         var dto = _fixture.Create<UpdateReviewDto>();
         var review = _fixture.Create<Review>();
-        review.UserId = Guid.NewGuid(); // not matching dto.UserId
+        review.UserId = Guid.NewGuid();
 
         _reviewRepoMock.Setup(r => r.GetReviewByIdAsync(dto.Id, default)).ReturnsAsync(review);
         _userRepoMock.Setup(u => u.GetUserByIdAsync(dto.UserId, default)).ReturnsAsync(_fixture.Create<User>());
