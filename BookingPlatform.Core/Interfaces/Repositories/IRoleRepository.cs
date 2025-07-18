@@ -8,5 +8,6 @@ public interface IRoleRepository
     Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default);
     Task<List<User>> GetAdmins(CancellationToken cancellationToken = default);
     Task DeleteRoleAsync(Guid roleId, CancellationToken cancellationToken = default);
+
 }
 

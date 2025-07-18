@@ -1,4 +1,5 @@
 ﻿using BookingPlatform.Core.Entities;
+using BookingPlatform.Core.Models;
 
 namespace BookingPlatform.Core.Interfaces.Repositories;
 
